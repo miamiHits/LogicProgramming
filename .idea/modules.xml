@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LP/LP.iml" filepath="$PROJECT_DIR$/LP/LP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RamesyNumbersAndColoring/LP.iml" filepath="$PROJECT_DIR$/RamesyNumbersAndColoring/LP.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/LogicProgramming.iml" filepath="$PROJECT_DIR$/.idea/LogicProgramming.iml" />
     </modules>
   </component>
