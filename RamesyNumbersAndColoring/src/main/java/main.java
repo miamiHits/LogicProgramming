@@ -4,30 +4,32 @@ import java.util.*;
 public class main {
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
+
 
       //  Scanner scan = new Scanner(System.in);
       //  int numOfVertices = scan.nextInt();
         int numOfVertices = 5;
+        int Ks = 3;
+        int Kt = 3;
+
+        for (int i=1; i<Ks; i++){
+            for (int j=1; j<Kt; j++){
+                
+            }
+        }
         //create graph
         Graph graph = new Graph(numOfVertices);
 
-       /* int v1, v2;
-
-        //read edges and add to the graph
-        while(scan.hasNextInt()){
-            v1 = scan.nextInt();
-            v2 = scan.nextInt();
-            graph.addEdge(v1, v2);
-        }*/
-
-    //    scan.close();
-        //1
-        graph.addEdge(1, 2);
-        graph.addEdge(1, 5);
-        graph.addEdge(2, 3);
-        graph.addEdge(4, 3);
-        graph.addEdge(4, 5);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(1, 5, 1);
+        graph.addEdge(1, 3, 0);
+        graph.addEdge(1, 4, 0);
+        graph.addEdge(2, 3, 1);
+        graph.addEdge(2, 5, 0);
+        graph.addEdge(2, 4, 0);
+        graph.addEdge(3, 5, 0);
+        graph.addEdge(4, 3, 1);
+        graph.addEdge(4, 5, 1);
 
 
         boolean colorable = graph.colorAll();

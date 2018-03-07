@@ -5,19 +5,34 @@ public class Graph {
 
     int numOfVertices;
     GraphNode[] vertices;
+    private int adjacencyMatrix[][];
 
     public Graph(int numOfVertices){
         this.numOfVertices = numOfVertices;
         this.vertices = new GraphNode[numOfVertices];
+        adjacencyMatrix = new int[numOfVertices][numOfVertices];
+
         for(int i=0;i<numOfVertices;i++){
             this.vertices[i] = new GraphNode(i+1);
         }
 
     }
 
-    public void addEdge(int v1, int v2){
-        this.vertices[v1-1].addNeighbor(v2);
-        this.vertices[v2-1].addNeighbor(v1);
+    public void addEdge(int v1, int v2, int color){
+        this.vertices[v1-1].addNeighbor(v2, color);
+        this.vertices[v2-1].addNeighbor(v1, color);
+    }
+
+    public void addEdgeToMat() {
+
+        for (int k=0; k< vertices.length; k++)
+        {
+            for(Map.Entry<Integer, Integer> entry : vertices[k].neighbors.entrySet()) {
+                adjacencyMatrix[k][entry.getKey()-1] = entry.getValue();
+
+            }
+        }
+
     }
 
     public void BFS(int startNode){
@@ -74,47 +89,46 @@ public class Graph {
         return;
     }
 
-    public boolean colorTree(int startNode){
+    public boolean colorTree(int startNode) {
         //return if the graph is colorable
 
         LinkedList<GraphNode> queue = new LinkedList<GraphNode>();
-        GraphNode root = this.vertices[startNode-1];
+        GraphNode root = this.vertices[startNode - 1];
         //color it as red
         root.color = 0;
         queue.offer(root);
 
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
 
             GraphNode node = queue.poll();
-            int color = node.color;
-            if(!node.visited){
+            if (!node.visited) {
                 node.visited = true;
+                for (Map.Entry<Integer, Integer> entry : node.neighbors.entrySet()) {
+                    int neignborColor = entry.getValue();
 
-                int nextColor = (color+1)%2;
-                for(int i=0;i<node.neighbors.size();i++){
-                    int neighborNode = node.neighbors.get(i);
-
-                    if(this.vertices[neighborNode-1].color < 0){
-                        //this node has not been colored before
-                        this.vertices[neighborNode-1].color = nextColor;
+                    for (Map.Entry<Integer, Integer> seconedEntry : vertices[entry.getKey()-1].neighbors.entrySet()) {
+                        if (seconedEntry.getKey() == node.nodeIndex) continue;
+                        for (Map.Entry<Integer, Integer> thirdEntry : vertices[seconedEntry.getKey() - 1].neighbors.entrySet()) {
+                            if (thirdEntry.getKey() ==  vertices[seconedEntry.getKey()-1].nodeIndex)continue;
+                            if (thirdEntry.getKey()==node.nodeIndex)
+                            {
+                                // so there is circle of 3 with same colors
+                                if (thirdEntry.getValue() == neignborColor && seconedEntry.getValue() == neignborColor)
+                                    return false;
+                                break;
+                            }
+                        }
                     }
-                 /*   else if(this.vertices[neighborNode-1].color != nextColor){
-                        //there is an odd cycle
-                        this.printOddCycle(node, this.vertices[neighborNode-1]);
-
-                        return false;
-                    }*/
-
-                    if(!this.vertices[neighborNode-1].visited){
-                        this.vertices[neighborNode-1].parent = node;
-                        queue.offer(this.vertices[neighborNode-1]);
+                    if(!this.vertices[entry.getKey()-1].visited){
+                        this.vertices[entry.getKey()-1].parent = node;
+                        queue.offer(this.vertices[entry.getKey()-1]);
                     }
-
                 }
 
             }
-        }
 
+
+        }
         return true;
     }
 
@@ -133,15 +147,12 @@ public class Graph {
     }
 
     public void printColor(){
-
-        for(int i=0;i<this.numOfVertices;i++){
-            System.out.printf("%d: ", this.vertices[i].nodeIndex);
-            if(this.vertices[i].color == 0){
-                System.out.println("Red");
+        addEdgeToMat();
+        for (int i = 0; i < numOfVertices; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
             }
-            else{
-                System.out.println("Blue");
-            }
+            System.out.println();
         }
     }
 
@@ -157,7 +168,7 @@ class GraphNode{
     //node index, from 1 to |V|
     int nodeIndex;
     //neighbors of the node
-    ArrayList<Integer> neighbors;
+    Map<Integer, Integer> neighbors;
     //if this node is visited
     boolean visited;
     //the parent node in the BFS tree
@@ -167,14 +178,33 @@ class GraphNode{
 
     public GraphNode(int nodeIndex){
         this.nodeIndex = nodeIndex;
-        this.neighbors = new ArrayList<Integer>();
+        this.neighbors = new HashMap<>();
         this.visited = false;
         this.parent = null;
         this.color = -1;
     }
 
-    public void addNeighbor(int neighborIndex){
-        this.neighbors.add(neighborIndex);
+
+
+    public void addNeighbor(int neighborIndex, int neighborColor){
+        this.neighbors.put(neighborIndex, neighborColor);
     }
 
+
+
+}
+
+class GraphEdge{
+    //node index, from 1 to |V|
+    int nodeIndexA;
+    int nodeIndexB;
+    //if this node is visited
+    boolean visited;
+    //the color of the node, -1: no color, 0: red, 1: blue
+    int color;
+    public GraphEdge(int nodeIndexA, int nodeIndexB){
+        this.nodeIndexA = nodeIndexA;
+        this.nodeIndexB = nodeIndexB;
+        this.color = -1;
+    }
 }
