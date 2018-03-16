@@ -26,7 +26,7 @@ public class main {
         List<int[][]> results = new ArrayList<>();
         helper.recAllPerm(matrix,0,1,results);
 
-        String fileName = "Y:\\downloads\\output_"+Ks+"_"+Kt+"_"+n+".txt";
+        String fileName = "C:\\output_"+Ks+"_"+Kt+"_"+n+".txt";
         if (results.isEmpty())
             writeNoSol(fileName);
 
